@@ -2858,7 +2858,7 @@ System.out.println(p2.age);
 
 4. 包的命名规则
 
-   只能包含数字、字母、下划线、小圆点，但不能用数字开头，不能是Java关键字或者保留字。
+   只能包含数字、字母、下划线、小圆点，但**不能用数字开头**，不能是Java关键字或者保留字。
 
 5. 包的命名规范
 
@@ -2900,7 +2900,7 @@ System.out.println(p2.age);
   1. 修饰符可以用来修饰类中的属性，成员方法以及类
   2. 类只能被public、默认修饰符修饰
 
-#### 7.2 封装
+#### 7.2 封装(encapsulation)
 
 ##### 7.2.1 什么是封装以及实现方法
 
@@ -2908,10 +2908,12 @@ System.out.println(p2.age);
 
    封装（encapsulation）就是把抽象出来的数据【属性】和数据的操作【方法】封装在一起，数据被保护在内部，程序的其他部分只能通过被授权的操作【方法】，才能对数据进行操作。
 
-2. 好处
+2. 封装的优点
 
-   - 隐藏功能实现细节
-   - 可以对数据进行验证，保证安全合理
+   - 可以对数据进行验证，保证安全合理，提高代码安全性
+   - 提高代码复用性
+   - 高内聚：隐藏功能实现细节，便于修改内部代码，提高可维护性
+   - 低耦合：简化外部调用，便于调用者使用，便于扩展和协作
 
 3. 封装实现步骤(三步)
 
@@ -3025,23 +3027,1008 @@ System.out.println(p2.age);
    3.在AccountTest中测试
 
    ```java
+   package com.ts.encap;
+   /*
+   1.Account类要求有属性：姓名（长度为2到4位）、余额（必须大于20）、
+   密码（必须为6位），如果不满足给提示信息设置默认值
+   2.通过set方法给Account的属性赋值
+   3.在AccountTest中测试
+    */
+   public class Account {
+       private String name;
+       private String pwd;
+       private double surplus;
+   
+       public Account(String name, String pwd, double surplus) {
+           this.setName(name);
+           this.setPwd(pwd);
+           this.setSurplus(surplus);
+       }
+   
+       public void setName(String name) {
+           if(name.length() >= 2 && name.length() <= 4){
+               this.name = name;
+           }else {
+               System.out.println("你输入的用户名不合法给默认为“aaa”！！！");
+               this.name = "aaa";
+           }
+       }
+   
+       public void setPwd(String pwd) {
+           if (pwd.length() == 6){
+               this.pwd = pwd;
+           }else {
+               System.out.println("你输入的密码不合法给默认为“aaa123”！！！");
+               this.pwd = "aaa123";
+           }
+   
+       }
+   
+       public void setSurplus(double surplus) {
+           if (surplus >= 20){
+               this.surplus = surplus;
+           }else{
+               System.out.println("余额不低于20给默认为“20”！！！");
+               this.surplus = 20.0;
+           }
+       }
+   
+       public String getName() {
+           return name;
+       }
+   
+       public String getPwd() {
+           return pwd;
+       }
+   
+       public double getSurplus() {
+           return surplus;
+       }
+       public void info(){
+           System.out.println("姓名："+this.getName());
+           System.out.println("密码："+this.getPwd());
+           System.out.println("余额："+this.getSurplus());
+       }
+   
+   }
+   class AccountTest{
+       public static void main(String[] args) {
+           Account abc = new Account("abc", "123456", 12893);
+           abc.info();
+   
+       }
+   }
+   
+   
+   ```
+
+##### 7.2.3  封装的使用细节
+
+1. 使用private访问权限
+2. 对外提供public的get与set方法来访问相关属性
+3. 对于数据类型为boolean的变量的get方法是is开头，如public isA(){} 
+
+#### 7.3 继承（extends）
+
+##### 7.3.1 为什么需要继承
+
+1. 看一个问题
+
+   编写两个类，一个是Pupil（小学生），一个是Graduate（研究生）。他们两个有很多相同的属性和方法，如果重复定义不合理也增加了工作量。有没有什么办法解决。---->继承
+
+2. 代码
+
+   ```java
+   package com.ts.extend;
+   //父类
+   public class Student {
+       String name;
+       int age;
+       String grade;
+       private double score;
+       public void setScore(double score) {
+           this.score = score;
+       }
+   
+       public double getScore() {
+           return score;
+       }
+       public void testing(){
+           System.out.println("学生"+this.name+"正在考试！！");
+       }
+       public void showInfo(){
+           System.out.println("==========学生信息如下=========");
+           System.out.println("学生姓名："+this.name);
+           System.out.println("学生年龄："+this.age+"岁");
+           System.out.println("就读年级："+this.grade);
+           System.out.println("学生成绩："+this.getScore());
+       }
+   }
+   
+   ```
+
+   ```java
+   package com.ts.extend;
+   
+   public class Graduate extends Student{
+       private int sid;
+   
+       public void setSid(int sid) {
+           this.sid = sid;
+       }
+   
+       public int getSid() {
+           return sid;
+       }
+       public void  idIs(){
+           System.out.println("学生id为："+this.getSid());
+       }
+   
+   }
+   
+   ```
+
+   ```java
+   package com.ts.extend;
+   
+   public class Pupil extends Student {
+       private int workTime;
+   
+       public void setWorkTime(int workTime) {
+           this.workTime = workTime;
+       }
+   
+       public int getWorkTime() {
+           return workTime;
+       }
+   
+       public void workTimes(){
+           System.out.println("家庭作业时间为："+this.getWorkTime()+"分钟");
+       }
+   }
    
    ```
 
    
 
-#### 7.3 继承
+##### 7.3.2 继承入门
 
+1. 基本介绍
 
+   继承可以解决代码复用，当多个类存在相同的属性（变量）和方法时，可以从这些类中抽象出父类，在父类中定义这些相同的属性和方法，所有的子类不需要重新定义这些属性和方法，只需要通过extends来声明继承父类
+
+2. 继承基本语法
+
+   class 子类 extends 父类{}
+
+   - 子类就会自动拥有父类定义的属性和方法
+   - 父类又叫超类，基类
+   - 子类又叫派生类
+
+3. 继承好处
+
+   - 提高了代码的**复用性**
+   - 提高了代码的**扩展性和维护性**
+
+##### 7.3.3 继承使用细节
+
+1. 子类继承了父类所有属性和方法，非私有的属性和方法可以在子类直接访问，但是私有属性和方法不能在子类直接访问，要通过父类public方法。
+2. 在创建子类对象时子类的构造器必须先调用父类的构造器，完成父类的初始化。**可以通过子类调用该类其他构造器来完成。如this(参数列表)**
+3. 当创建对象时，不管使用子类的哪个构造器，默认情况下总会去调用父类的无参构造器，**子类里的构造器会默认存在super();语句，这句话意思就是调用父类无参构造器**如果父类没有提供无参构造器，则必须在子类的构造器中使用super去指定使用父类的哪个构造器完成对父类的初始化工作，否则编译不通过。如：super("ttt",38);
+4. 如果希望指定去调用父类的某个构造器，则显式的调用一下：super（参数列表）;
+5. super在构造器里使用的时候，必须放在子类构造器的第一行。
+6. super() 和 this() 在构造器里使用的时候都只能放在构造器的第一行，因此这两个方法不能共存在一个构造器里。
+7. Java所有类都是Object的子类，自己定义的类也默认继承Object类
+8. 父类构造器调用不限于直接父类！就一直往上追溯直到Object类，然后从上至下一一初始化。（顶级父类，基类）。
+9. 子类最多只能继承一个父类（直接继承），即java中是单继承机制。
+10. 不能滥用继承，子类和父类之间必须满足 A is a B 的逻辑关系
+
+##### 7.3.4 继承的本质（底层原理）
+
+1. 案例
+
+   分析子类继承父类，创建子类对象时，内存发生了什么？
+
+   回答：子类创建对象后，建立了以下的查找关系。
+
+   (1)首先看子类是否有该属性
+
+   (2)如果子类有该属性，并且能够访问，则返回该属性信息
+
+   (3)如果没有该属性或不能访问（会报错），则向上寻找，就看父类有没有（同理）
+
+   (4)如果一找到该属性就不会往上找了，如果该属性为私有无法访问则立马报错。
+
+   (5)如果还没有就继续往上一级寻找，直到Object类
+
+   (6)如果还找不到，就报错。
+
+   ```java
+   package com.ts.extend;
+   
+   public class ExtendsTheory {
+       public static void main(String[] args) {
+           Son son = new Son();  //内存布局。
+           System.out.println(son.name);  //大头儿子
+           System.out.println(son.age);   //30
+           //Father-->privat int age = 30; 照样报错 
+           System.out.println(son.hobby); //旅游
+           //(1)首先看子类是否有该属性
+           //(2)如果子类有该属性，并且能够访问，则返回该属性信息
+           //(3)如果没有该属性或不能访问（会报错），则向上寻找，就看父类有没有（同理）
+           //(4)如果还没有就继续往上一级寻找，直到Object
+           //(5)如果还找不到，就报错。
+   
+       }
+   }
+   class Grandpa{
+       String name = "大头爷爷";
+       int age = 72;
+       String hobby = "旅游";
+   
+   }
+   class Father extends Grandpa{
+       String name = "大头爸爸";
+       int age = 30;
+   }
+   class Son extends Father{
+       String name = "大头儿子";
+   }
+   ```
+
+   <img src="C:\Users\86177\AppData\Roaming\Typora\typora-user-images\image-20221021150336827.png" alt="image-20221021150336827" style="zoom:80%;" />
+
+2. 练习思考
+
+   ```java
+   class A{
+       A(){System.out.println("a");}
+       A(String name){System.out.println("a name");}
+   }
+   class B{
+       B(){this("abc");System.out.println("b");}
+       B(String name){System.out.println("b name");}
+   }
+   //main 中 B b = new B();输出什么？
+   //a
+   //b name
+   //b
+   ```
+
+   
 
 #### 7.4 super的使用
 
+##### 7.4.1 super 的介绍及语法
 
+1. 基本介绍
 
-#### 7.5 方法重写
+   super代表父类的引用，用于访问父类的属性、方法、构造器。
 
+2. 基本语法
 
+   - 能访问父类的属性，但不能访问父类的private属性(调用)
 
-#### 7.6 多态
+     super.属性名;
+
+   - 访问父类方法，但不能访问父类的private方法（调用）
+
+     super.方法名(参数列表);
+
+   - 访问父类的构造器
+
+     super(参数列表);  必须放在**构造器**的第一行，也只能有一条。
+
+##### 7.4.2 super 的使用细节
+
+1. 调用父类构造器好处
+
+   分工明确（**this、super**），父类属性由父类初始化，子类属性由子类初始化。
+
+2. 当子类和父类的成员中有重名时，为了访问父类的成员，必须通过super（super只是说跳过子类寻找从它的上一级父类开始）（因为重名this会直接调用自己的方法调用不到父类的方法,遵循寻找原则）。**如果没有重名，使用super、this、直接访问是一样的效果。**
+
+   ```java
+   package com.ts.super_;
+   
+   public class Super01 {
+       public static void main(String[] args) {
+           Y y = new Y();
+           y.z();
+           y.show();
+           //你好我是儿子y（）
+           //你好我是父亲x（）
+           //你好我是父亲x（）
+           //我是父亲w（）
+       }
+   
+   }
+   
+   class X{
+       String name = "xx";
+       int age = 10;
+       String pwd = "xx123";
+       public void x(){
+           System.out.println("你好我是父亲x（）");
+       }
+       public void w(){
+           System.out.println("我是父亲w（）");
+       }
+   }
+   
+   class Y extends X{
+       String name = "yy";
+       int agg = 12;
+       String pw = "yy123";
+       public void y(){
+           System.out.println("你好我是儿子y（）");
+       }
+       public void w(){
+           System.out.println("我是儿子w（）");
+       }
+       public void z(){
+           this.y();   //this调用自己的y()
+           x();        //直接调用父类x()
+       }
+       public void show(){
+           this.x();     //this调用父类x()
+           super.w();    //super调用的是父类的w()
+           this.w();     //调用自己的w()
+           w();          //调用自己的w()
+       }
+   }
+   
+   ```
+
+   
+
+3. super 与this 的比较
+
+   ![](C:\Users\86177\AppData\Roaming\Typora\typora-user-images\image-20221021152840773.png)
+
+#### 7.5 方法重写/覆盖（override）
+
+##### 7.5.1 方法重写介绍
+
+1. 基本介绍
+
+   方法重写（覆盖）就是子类的一个方法和父类的某个方法的名称、返回类型、参数一样，那么我们就叫这个子类的方法覆盖了（重写了）父类的那个方法。
+
+2. 重写不能只理解为父子两个类的关系可以是整条继承线，只要满足以上条件，重写爷爷或者.......都可以。
+
+##### 7.5.2 方法重写注意事项
+
+1. 子类方法的**参数，方法名称**，要和父类方法的**参数、方法名称**完全一样。
+
+2. 子类方法的**返回类型**和**声明异常类型**要与父类方法的返回类型及声明异常类型**相同**，或者是父类返回类型的子类。比如父类方法返回类型是Object，子类方法返回类型是String.
+
+   **由于String本身就是Object的子类满足重写**
+
+3. 子类方法不能**缩小**父类方法的**访问权限**
+
+##### 7.5.3 方法重载与重写比较
+
+![image-20221022133511900](C:\Users\86177\AppData\Roaming\Typora\typora-user-images\image-20221022133511900.png)
+
+#### 7.6 多态（polymorphism）
+
+##### 7.6.1 多态的介绍
+
+1. 多态即多种状态，是指**方法或对象**具有多种形态。建立在封装和继承基础之上的
+2. 多态的具体表现
+   - 方法的多态：方法重写与重载
+   - 对象的多态：父类引用（**编译类型**）指向子类对象（**运行类型**）
+     1. 一个对象的编译类型和运行类型可以不一致
+     2. 编译类型在定义对象时，就确定了不能改变
+     3. 运行类型是可变的
+     4. 编译类型看定义时候  =  的左边，运行类型看   =  的右边。
+
+##### 7.6.2 多态的入门
+
+1. 案例：编写程序实现主人（Master）对不同的宠物喂食
+
+   宠物（Pet）：狗（Dog）、猫（Cat）、猪（pig）
+
+   食物（Food）：骨头（Bone）、鱼（Fish）、米饭（Rice）
+
+   ```java
+   package com.ts.poly_;
+   //宠物类
+   public class Pet {
+       private String name;
+   
+       public Pet(String name) {
+           this.name = name;
+       }
+   
+       public String getName() {
+           return name;
+       }
+   }
+   //狗类
+   class Dog extends Pet{
+       public Dog(String name) {
+           super(name);
+       }
+   }
+   //猫类
+   class Cat extends Pet{
+       public Cat(String name) {
+           super(name);
+       }
+   }
+   //猪类
+   class Pig extends Pet{
+       public Pig(String name) {
+           super(name);
+       }
+   }
+   ```
+
+   ```java
+   package com.ts.poly_;
+   
+   public class Food {
+       private String name;
+   
+       public Food(String name) {
+           this.name = name;
+       }
+   
+       public String getName() {
+           return name;
+       }
+   }
+   //骨头类
+   class Bone extends Food{
+       public Bone(String name) {
+           super(name);
+       }
+   }
+   //鱼类
+   class Fish extends Food{
+       public Fish(String name) {
+           super(name);
+       }
+   }
+   //米饭类
+   class Rice extends Food{
+       public Rice(String name) {
+           super(name);
+       }
+   }
+   
+   
+   ```
+
+   ```java
+   package com.ts.poly_;
+   
+   public class Master {
+       private String name;
+   
+       public Master(String name) {
+           this.name = name;
+       }
+   
+       public String getName() {
+           return name;
+       }
+       public void feedig(Pet pet,Food food){
+           System.out.println("主人"+this.name+"正在给他的宠物"+pet.getName()+"喂食"+food.getName()+"!!!");
+       }
+   }
+   
+   ```
+
+   ```java
+   package com.ts.poly_;
+   
+   public class TestPoly_ {
+       public static void main(String[] args) {
+           Pet pet = new Dog("大黄狗");
+           Food food = new Bone("大腿骨");
+           Master master = new Master("小兰");
+           master.feedig(pet,food);
+           System.out.println("========================");
+           Pet pet1 = new Cat("小花猫");
+           Food food1 = new Fish("小黄鱼");
+           Master master1 = new Master("小帅");
+           master1.feedig(pet1,food1);
+       }
+   }
+   /*
+   主人小兰正在给他的宠物大黄狗喂食大腿骨!!!
+   ========================
+   主人小帅正在给他的宠物小花猫喂食小黄鱼!!!
+   */
+   ```
+
+   
+
+##### 7.6.3 多态的使用细节（向上转型与向下转型）
+
+1. 多态的前提：存在继承关系
+
+2. 多态的向上转型（语法对比自动类型转换）
+
+   - 本质：父类引用指向子类对象
+
+   - 语法：父类类型     引用名   =   new   子类类型();
+
+   - 特点：**编译看左边，运行看右边**。可以调用父类的所有成员（需要遵守访问权限），不能调用子类中**特有**成员（父类不存在的方法或属性）。需要用到向下转型。
+
+     ```java
+     public class Pet {
+         private String name;
+     
+         public Pet(String name) {
+             this.name = name;
+         }
+     
+         public String getName() {
+             return name;
+         }
+     }
+     
+     class Dog extends Pet{
+         int age = 10;  //特有成员
+         public Dog(String name) {
+             super(name);
+         }
+     }
+     Pet pet = new Dog("大黄狗");  //向上转型
+     pet.age = 20; //报错，不能访问到子类的特殊属性
+     (Dog)pet.age = 20; //向下转型
+     ```
+
+     
+
+3. 向上转型的调用方法规则
+
+   1. 可以调用编译阶段类型的类里的所有成员及其父类的所有成员（遵循访问权限）
+   2. 但是可以调用子类的成员
+   3. 最终运行效果看子类（运行类型）的具体实现，即在调用方法时，按照从子类（运行类型）开始查找方法。
+
+4. 多态的向下转型（语法对比强制类型转换）
+
+   - 语法：子类类型     引用名  =  （子类类型）父类引用
+   - 只能强制转父类引用，不能强制转父类对象
+   - 要求父类的引用必须指向的是当前目标类型的对象
+   - 当向下转型后，可以调用子类类型中所有的成员
+
+5. 属性没有重写之说，属性的值看编译类型。例如：
+
+   ```java
+   class A{
+       int count = 20;
+   }
+   class B extends A{
+       int count = 10;
+   }
+   A a = new B();
+   System.out.println(a.count);  //20
+   ```
+
+   ```java
+   Pet--->Pig--->NaiPig
+   Pet pp = new NaiPig("aaa");
+   Pig p2 = (Pig)pp;
+   master1.feeding(p2,food1);
+   //主人小帅正在给他的宠物aaa喂食小黄鱼!!!
+   ```
+
+6. instanceof 运算符
+
+   1. instanceof是二元运算符，用于判断对象的运行类型是否为XX类型或者XX类型的子类。
+
+      ```java
+      public class AAA {
+          public static void main(String[] args) {
+              BBB b = new BBB();
+              AAA a = new BBB();
+              AAA aa = new AAA();
+              System.out.println(b instanceof BBB);  //true
+              System.out.println(b instanceof AAA);  //true 
+              System.out.println(a instanceof AAA);  //true
+              System.out.println(a instanceof BBB);  //true
+              System.out.println(aa instanceof BBB); //false
+          }
+      }
+      class BBB extends AAA{
+      }
+      ```
+
+##### 7.6.4 java中的动态绑定机制
+
+1. 当调用对象**方法**的时候，该方法会和该对象的内存地址（运行类型）绑定。
+
+2. 当调用对象**属性**时，没有动态绑定机制，哪里声明就在哪里使用。
+
+3. 如下例题：
+
+   ```java
+   package com.ts.poly_.dynamic_bind;
+   
+   public class DynamicBind {
+       public static void main(String[] args) {
+           A a = new B();
+           //注释掉子类的这两个方法后
+           System.out.println(a.sum());  //40-->30
+           System.out.println(a.sum1()); //30-->20
+       }
+   }
+   class A{
+       public int i =10;
+       public int sum(){
+           return get1()+10;  //会调用子类的get1() -->动态绑定
+       }
+       public int sum1(){
+           return i+10;   //10 + 10 = 20
+       }
+       public int get1(){
+           return i;
+       }
+   }
+   class B extends A{
+       public int i =20;
+   //    public int sum(){
+   //        return i+20;
+   //    }
+   //    public int sum1(){
+   //        return i+10;
+   //    }
+       public int get1(){
+           return i;  //20+10 = 30
+       }
+   }
+   ```
+
+   
+
+##### 7.6.5 多态数组
+
+1. 数组定义类型为父类类型（编译类型），里面保存的实际元素可以是子类类型（运行类型）。
+
+2. 应用实例（看代码）：
+
+   ```java
+   package com.ts.poly_.poly_array;
+   //人类
+   public class Person {
+       private String name;  //姓名
+       private int age;      //年龄
+   	//构造器
+       public Person(String name, int age) {
+           this.name = name;
+           this.age = age;
+       }
+   	
+       public String getName() {
+           return name;
+       }
+   
+       public int getAge() {
+           return age;
+       }
+   	//返回自己的信息方法
+       public String say() {
+           return "姓名:" + name + "\t年龄:" + age;
+       }
+   }
+   //学生类继承人类
+   class Student extends Person {
+       private double score;    //特有属性成绩
+   	//构造器
+       public Student(String name, int age, double score) {
+           super(name, age);     //调用父类构造器对父类属性进行初始化
+           this.score = score;
+       }
+   
+       public double getScore() {
+           return score;
+       }
+   	//重写父类say()方法
+       public String say(){
+           return "学生："+super.say() + "\t成绩:"+score;
+       }
+   	//特有的方法
+       public void studing(){
+           System.out.println("学生"+getName()+"正在学习......");
+       }
+   }
+   //老师类继承人类
+   class Teacher extends Person{
+       private double salary;      //特有属性工资
+   	//构造器
+       public Teacher(String name, int age, double salary) {
+           super(name, age);
+           this.salary = salary;
+       }
+   
+       public double getSalary() {
+           return salary;
+       }
+   	//重写父类方法
+       public String say(){
+           return "老师："+super.say() + "\t薪水:"+salary;
+       }
+   	//特有方法
+       public void teaching(){
+           System.out.println("老师"+getName()+"正在教学......");
+       }
+   }
+   ```
+
+   ```java
+   package com.ts.poly_.poly_array;
+   
+   public class TestPolyArray {
+       public static void main(String[] args) {
+   //        Person p1 = new Teacher("小张",48,6000);
+   //        System.out.println(p1.say());
+           //创建五个对象分别如下，保存在一个Person类型数组中;
+           Person[] ps = new Person[5];   //创建Person类型数组
+           //给数组赋值
+           ps[0] = new Person("ww",43);  
+           ps[1] = new Student("tw",13,93);;
+           ps[2] = new Student("wq",21,100);
+           ps[3] = new Teacher("ta",34,10000);
+           ps[4] = new Teacher("tin",53,20000);
+           //打印输出每个对象都调用say()方法的结果：
+           for (Person p:ps ) {
+               System.out.println(p.say()); //动态绑定
+           }
+           System.out.println("--------------分界线-------------");
+           //要求学生对象或者老师对象调用自己特有的方法：
+           //1.利用instanceof运算符判断对象的运行类型是什么类型;
+           //2.向下转型分别调用特有方法;
+           for (int i = 0;i < ps.length;i++){
+               if(ps[i] instanceof Student){     //判断运行类型对象为
+                   ((Student) ps[i]).studing();  //向下转型再调用自己特有的方法
+               } else if(ps[i] instanceof Teacher){
+                   ((Teacher)ps[i]).teaching();
+               } else {
+                   System.out.println("你是普通人！！！");
+               }
+           }
+       }
+   }
+   /*
+   姓名:ww	年龄:43
+   学生：姓名:tw	年龄:13	成绩:93.0
+   学生：姓名:wq	年龄:21	成绩:100.0
+   老师：姓名:ta	年龄:34	薪水:10000.0
+   老师：姓名:tin	年龄:53	薪水:20000.0
+   --------------分界线-------------
+   你是普通人！！！
+   学生tw正在学习......
+   学生wq正在学习......
+   老师ta正在教学......
+   老师tin正在教学......
+   
+   Process finished with exit code 0
+   
+   */
+   ```
+
+##### 7.6.6 多态参数
+
+1. 定义
+
+   形参类型为父类类型，实参传输允许为子类类型。
+
+2. 案例：
+
+   （1）定义员工类Employee，包含姓名（name）和月工资（monthSalary）[private]，以及计算年工资getAnnual的方法。普通员工（Worker）和经理（Manager）继承了员工，经理类多了奖金bonus属性和管理manage方法，普通员工类多了work方法，普通员工和经理类要求分别重写getAnnual方法
+   （2）测试类中添加一个方法showEmpAnnual(Employee e)，实现获取任何员工对象的年工资,并在main方法中调用该方法[e.getAnnual0]
+   （3）测试类中添加一个方法，testWork,如果是普通员工，则调用work方法，如果是经理,则调用manage方法
+
+   ```java
+   package com.ts.poly_.parameter;
+   
+   public class Employee {
+       private String name;
+       private double monthSalary;
+   
+       public Employee(String name, double monthSalary) {
+           this.name = name;
+           this.monthSalary = monthSalary;
+       }
+   
+       public String getName() {
+           return name;
+       }
+   
+       public double getMonthSalary() {
+           return monthSalary;
+       }
+   
+       public double getAnnual(){
+           return monthSalary*12;
+       }
+   }
+   class Worker extends Employee{
+       public Worker(String name, double monthSalary) {
+           super(name, monthSalary);
+       }
+   
+       public void work(){
+           System.out.println("员工"+getName()+"正在工作...");
+       }
+   
+       public double getAnnual(){
+           return super.getAnnual();
+       }
+   }
+   class Manager extends Employee{
+       private double bonus;
+   
+       public Manager(String name, double monthSalary, double bonus) {
+           super(name, monthSalary);
+           this.bonus = bonus;
+       }
+   
+       public void manage(){
+           System.out.println("经理"+getName()+"正在管理工作...");
+       }
+   
+       public double getAnnual(){
+           return super.getAnnual()+bonus;
+       }
+   }
+   
+   ```
+
+   ```java
+   package com.ts.poly_.parameter;
+   
+   public class Test {
+       public static void main(String[] args) {
+           Employee er = new Manager("大堂经理", 10000, 1200);
+           Employee ee = new Worker("小王", 8000);
+           Test t = new Test();
+           System.out.println("----------------测试一--------------");
+           t.showEmpAnnual(er);
+           t.showEmpAnnual(ee);
+           System.out.println("----------------测试二--------------");
+           t.testWork(er);
+           t.testWork(ee);
+           System.out.println("----------------测试完毕--------------");
+       }
+       public void showEmpAnnual(Employee ee){
+           System.out.println(ee.getName()+"年工资为："+ee.getAnnual());
+       }
+   
+       public void testWork(Employee ee){
+           if (ee instanceof Worker){
+               ((Worker) ee).work();
+           } else if(ee instanceof Manager){
+               ((Manager) ee).manage();
+           } else {
+               System.out.println("你的对象有误");
+           }
+       }
+   }
+   /*
+   ----------------测试一--------------
+   大堂经理年工资为：121200.0
+   小王年工资为：96000.0
+   ----------------测试二--------------
+   经理大堂经理正在管理工作...
+   员工小王正在工作...
+   ----------------测试完毕--------------
+   */
+   ```
+
+#### 7.7 java内部类（Object）
+
+##### 7.7.1 Object类equals方法
+
+1. package java.lang.Object
+
+2. 类`Object`是类层次结构的根。 每个类都由`Object`作为超类。 所有对象（包括数组）都实现此类的方法。
+
+3. equals方法：
+
+   equals方法是Object类中的成员方法，只能判断引用类型，某个其他对象是否“等于”此对象（地址判断）。但是在它的子类当中往往重写了该方法，用于判断两个对象是否为同一对象或者两个对象的值是否相等。比如String类
+
+   对比  == 的使用区别。
+
+   1. == 是比较运算符
+
+   2. == 用于基本数据类型比较时比的是数值是否相等。
+
+   3. == 用于对象比较时，比的是地址（运行类型）是否相等。（即是否为同一对象）
+
+   4. 案例：自己重写一个equals方法，判断两个Person对象的内容是否相等（属性值）name、age、gender
+
+      ```java
+      package com.ts.object;
+      
+      public class Person {
+          private String name;
+          private int age;
+          private String gender;
+      
+          public Person(String name, int age, String gender) {
+              this.name = name;
+              this.age = age;
+              this.gender = gender;
+          }
+      
+          public String getName() {
+              return name;
+          }
+      
+          public void setName(String name) {
+              this.name = name;
+          }
+      
+          public int getAge() {
+              return age;
+          }
+      
+          public void setAge(int age) {
+              this.age = age;
+          }
+      
+          public String getGender() {
+              return gender;
+          }
+      
+          public void setGender(String gender) {
+              this.gender = gender;
+          }
+          /*
+          自己重写一个equals方法，判断两个Person对象的内容是否相等
+          （属性值）name、age、gender
+           */
+          public boolean equals(Object obj){
+              if(this == obj){    //判断当前对象与比较对象是否为同一对象
+                  return true;
+              }
+              if(obj instanceof Person){   //判断当前对象是不是Person或者子类对象
+                  Person p1 = (Person)obj; //向下转型
+                  Person p2 = this;
+                  //判断属性是否相等。
+                  if (p1.getName() == p2.getName() && p1.getAge() == p2.getAge() && p1.getGender() == p2.getGender()){
+                      return true;
+                  }
+                  return false;
+                  //以上代码可简写为下面这一句
+                  //return if(p1.name.equals(p2.name) && p1.gender ==p2.gender && p1.age == p2.age);
+              }
+              return false;
+          }
+      }
+      
+      ```
+
+##### 7.7.2 hashCode方法
+
+1. public int hashCode()：
+
+   返回对象的哈希码值。 支持此方法的好处是哈希表，例如`HashMap`提供的哈希表
+
+2. 作用规则：
+
+   - 提高具有哈希结构的容器的效率！
+   - 两个引用，如果指向的是同一对象，则哈希值肯定是一样的！
+   - 两个引用，如果指向不同对象，则哈希值一般不一样！
+   - 哈希值主要根据对象的地址号而来，不能完全将哈希值等价于地址 。
+
+##### 7.7.3 toString方法
+
+1. 介绍：
+
+   默认返回：全类名（包+类）+@+哈希值的十六进制，子类往往重写该方法，用于返回对象的属性信息
+
+2. 当直接输出一个对象时，toString方法会被默认的调用，比如System.out。println(monster);会自动调用monster.toString()
+
+##### 7.7.4 finalize方法
+
+1. 当对象被回收时，系统自动调用该对象的finalize方法。子类可以重写该方法，做一些**释放资源**的操作。
+2. 什么时候能被回收：当某个对象没有任何引用时，则jvm就认为这个对象是一个垃圾对象，就会使用垃圾回收机制来销毁该对象，在销毁该对象前，会先调用finalize方法。
+3. 垃圾回收机制的调用，是由系统来决定，也可以通过System.gc()主动触发垃圾回收机制。
 
 
